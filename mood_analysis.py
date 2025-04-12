@@ -1,25 +1,29 @@
 import ollama
-import re
 
-def analyze_mood(entry):
+def analyze_mood(text, model='llama3'):
     try:
+        valid_moods = [
+            'Happy', 'Sad', 'Angry', 'Excited', 'Anxious', 'Calm',
+            'Tired', 'Frustrated', 'Grateful', 'Joyful', 'Confused', 'Lonely'
+        ]
+
         prompt = (
-            "Analyze the emotional tone of the following journal entry "
-            "and respond with only one word (like Happy, Sad, Anxious, Angry, Excited, etc). "
-            "Do NOT include any explanation or full sentence.\n\n"
-            f"Entry: {entry}"
+            "You are an emotion detection AI.\n"
+            "Your job is to read the journal entry and respond with ONLY one word that best describes the mood.\n"
+            "Choose ONLY from this list:\n"
+            f"{', '.join(valid_moods)}\n\n"
+            f"Journal Entry:\n{text}\n\n"
+            "Mood:"
         )
 
-        response = ollama.chat(
-            model="llama3",
-            messages=[{"role": "user", "content": prompt}]
-        )
+        response = ollama.chat(model=model, messages=[{"role": "user", "content": prompt}])
+        raw_output = response['message']['content'].strip().title()
 
-        content = response['message']['content'].strip()
+        # Extract the first valid mood found in the response
+        for mood in valid_moods:
+            if mood in raw_output:
+                return mood
 
-        # Use regex to extract first capitalized emotion-like word
-        match = re.search(r"\b(Happy|Sad|Angry|Excited|Anxious|Calm|Tired|Frustrated|Grateful|Joyful|Confused|Lonely)\b", content, re.IGNORECASE)
-        return match.group(0).capitalize() if match else "Unknown"
-
+        return f"Error: Unexpected mood output: '{raw_output}'"
     except Exception as e:
         return f"Error: {str(e)}"

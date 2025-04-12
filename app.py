@@ -1,31 +1,24 @@
 import streamlit as st
-from mood_analysis import analyze_mood
-from database import init_db, insert_entry, fetch_entries
-from visualization import plot_mood_trends
 
-# Page configuration
 st.set_page_config(page_title="AI Mood Journal", layout="centered")
-st.title("🧠 AI-Powered Mood Journal")
 
-# Initialize the database
-init_db()
+st.title("🧠 Welcome to the AI Mood Journal")
 
-# Text input for journal entry
-entry = st.text_area("Write about your day:", height=200)
+st.markdown("""
+Track your feelings, understand your emotional patterns, and gain insights using AI-powered sentiment analysis.
+""")
 
-# Analyze button
-if st.button("Analyze Mood"):
-    if entry.strip():
-        mood = analyze_mood(entry)
-        if mood.startswith("Error:"):
-            st.error(f"Mood Detection Failed: {mood}")
-        else:
-            st.success(f"Mood Detected: **{mood}**")
-            insert_entry(entry, mood)
-    else:
-        st.warning("Please write something before submitting.")
+# Add navigation-style buttons
+st.markdown("### 🌐 Navigate to:")
+col1, col2 = st.columns(2)
 
-# Show mood trends
-st.subheader("📈 Mood Trend Over Time")
-data = fetch_entries()
-plot_mood_trends(data)
+with col1:
+    if st.button("🏠 Go to Home"):
+        st.switch_page("pages/1_Home.py")
+
+with col2:
+    if st.button("📊 Go to Stats"):
+        st.switch_page("pages/2_Stats.py")
+
+# Add image or illustration
+st.image("https://media.giphy.com/media/3orieRzvBJA0uSgvTG/giphy.gif", use_column_width=True)

@@ -1,4 +1,3 @@
-# database.py
 import sqlite3
 from datetime import datetime
 
@@ -29,7 +28,7 @@ def insert_entry(entry, mood):
 def fetch_entries():
     conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
-    c.execute("SELECT timestamp, mood FROM journal ORDER BY timestamp ASC")
+    c.execute("SELECT timestamp, entry, mood FROM journal ORDER BY timestamp ASC")
     data = c.fetchall()
     conn.close()
     return data
