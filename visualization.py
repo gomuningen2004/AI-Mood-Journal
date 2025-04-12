@@ -7,7 +7,7 @@ def plot_mood_trends(data):
         st.info("No mood data to display yet.")
         return
 
-    df = pd.DataFrame(data, columns=["timestamp", "entry", "mood"])
+    df = pd.DataFrame(data, columns=["timestamp", "mood"])
     df['timestamp'] = pd.to_datetime(df['timestamp'])
 
     # Filter only valid moods for plotting
