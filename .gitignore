@@ -1,0 +1,55 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+ENV/
+.venv/
+
+# VS Code settings
+.vscode/
+
+# macOS and Linux system files
+.DS_Store
+*.swp
+
+# Python-specific
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Local config and cache
+*.env
+.env.*
+*.sqlite3
+*.db
+*.tmp
+.cache/
+logs/
+
+# Ollama models and cache (if any)
+ollama/
+
+# Streamlit temporary data
+.streamlit/
+
+# Output files or generated data
+*.csv
+*.json
+*.pdf
+*.png
+*.jpg
+*.jpeg
+
+# PyInstaller output
+dist/
+build/
+*.spec
