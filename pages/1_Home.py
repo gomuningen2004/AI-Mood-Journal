@@ -2,15 +2,27 @@ import streamlit as st
 from mood_analysis import analyze_mood
 from database import init_db, insert_entry, fetch_entries
 
+st.set_page_config(page_title="Journal Home", layout="centered")
 st.title("📓 Journal Home")
 
-# Initialize the database
+# Initialize DB
 init_db()
 
-# Input journal entry
+# Mood-color mapping
+mood_colors = {
+    "Happy": "#28a745",     # green
+    "Sad": "#007bff",       # blue
+    "Angry": "#dc3545",     # red
+    "Calm": "#17a2b8",      # teal
+    "Anxious": "#ffc107",   # yellow
+    "Excited": "#6610f2",   # purple
+    "Neutral": "#6c757d",   # gray
+}
+
+# Entry input
 entry = st.text_area("Write about your day:", height=200)
 
-# Analyze mood and save
+# Mood Analysis
 if st.button("Analyze Mood"):
     if entry.strip():
         mood = analyze_mood(entry)
@@ -22,7 +34,7 @@ if st.button("Analyze Mood"):
     else:
         st.warning("Please write something before submitting.")
 
-# View entries
+# Show entries
 st.subheader("📚 View Journal Entries")
 entries = fetch_entries()
 
@@ -35,7 +47,30 @@ filtered_entries = [
     if selected_mood == "All" or mood == selected_mood
 ]
 
-# Display filtered entries
-for ts, entry, mood in filtered_entries:
-    with st.expander(f"[{ts[:19]}] Mood: {mood}"):
-        st.write(entry)
+# Show entries as colored cards
+for ts, entry_text, mood in reversed(filtered_entries):
+    color = mood_colors.get(mood, "#6c757d")  # fallback gray
+
+    card_html = f"""
+    <div class="card" style="
+        margin-bottom: 1rem;
+        border: 2px solid {color};
+        border-radius: 0.75rem;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
+      <div class="card-body" style="padding: 1rem;">
+        <span style="
+            background-color: {color};
+            color: white;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 600;">
+          {mood}
+        </span>
+        <p style="margin-top: 0.75rem; font-size: 1rem; line-height: 1.5;">
+          {entry_text}
+        </p>
+      </div>
+    </div>
+    """
+    st.markdown(card_html, unsafe_allow_html=True)
